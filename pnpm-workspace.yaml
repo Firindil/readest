@@ -1,6 +1,7 @@
 packages:
   - apps/*
   - packages/foliate-js
+  - ../readest-plugin-sdk/packages/sdk
 
 onlyBuiltDependencies:
   - sharp

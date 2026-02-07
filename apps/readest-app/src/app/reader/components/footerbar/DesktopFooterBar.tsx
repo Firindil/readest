@@ -5,6 +5,7 @@ import { RiArrowGoBackLine, RiArrowGoForwardLine } from 'react-icons/ri';
 import { RiArrowLeftDoubleLine, RiArrowRightDoubleLine } from 'react-icons/ri';
 import { getNavigationIcon, getNavigationLabel, getNavigationHandler } from './utils';
 import { useReaderStore } from '@/store/readerStore';
+import { usePluginStore } from '@/store/pluginStore';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useBookDataStore } from '@/store/bookDataStore';
 import { FooterBarChildProps } from './types';
@@ -21,6 +22,7 @@ const DesktopFooterBar: React.FC<FooterBarChildProps> = ({
 }) => {
   const _ = useTranslation();
   const { hoveredBookKey, getView, getViewState, getProgress, getViewSettings } = useReaderStore();
+  const { pluginStatusBarItems } = usePluginStore();
   const { getBookData } = useBookDataStore();
   const view = getView(bookKey);
   const bookData = getBookData(bookKey);
@@ -128,6 +130,18 @@ const DesktopFooterBar: React.FC<FooterBarChildProps> = ({
         onClick={onSpeakText!}
         label={_('Speak')}
       />
+      {pluginStatusBarItems.map((item) => (
+        <span
+          key={item.id}
+          title={item.tooltip}
+          className='mx-1 text-xs text-base-content/70'
+          onClick={item.onClick}
+          role={item.onClick ? 'button' : undefined}
+          tabIndex={item.onClick ? 0 : undefined}
+        >
+          {item.text}
+        </span>
+      ))}
       <Button
         icon={getNavigationIcon(viewSettings?.rtl, <RiArrowRightSLine />, <RiArrowLeftSLine />)}
         onClick={getNavigationHandler(

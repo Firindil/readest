@@ -9,7 +9,7 @@ import { RiDashboardLine, RiTranslate } from 'react-icons/ri';
 import { VscSymbolColor } from 'react-icons/vsc';
 import { PiDotsThreeVerticalBold, PiRobot } from 'react-icons/pi';
 import { LiaHandPointerSolid } from 'react-icons/lia';
-import { IoAccessibilityOutline } from 'react-icons/io5';
+import { IoAccessibilityOutline, IoExtensionPuzzleOutline } from 'react-icons/io5';
 import { MdArrowBackIosNew, MdArrowForwardIos, MdClose } from 'react-icons/md';
 import { FiSearch } from 'react-icons/fi';
 import { getDirFromUILanguage } from '@/utils/rtl';
@@ -24,6 +24,7 @@ import ControlPanel from './ControlPanel';
 import LangPanel from './LangPanel';
 import MiscPanel from './MiscPanel';
 import AIPanel from './AIPanel';
+import PluginSettingsPanel from './PluginSettingsPanel';
 import { useCommandPalette } from '@/components/command-palette';
 
 export type SettingsPanelType =
@@ -33,6 +34,7 @@ export type SettingsPanelType =
   | 'Control'
   | 'Language'
   | 'AI'
+  | 'Plugins'
   | 'Custom';
 export type SettingsPanelPanelProp = {
   bookKey: string;
@@ -96,6 +98,11 @@ const SettingsDialog: React.FC<{ bookKey: string }> = ({ bookKey }) => {
       disabled: process.env.NODE_ENV === 'production',
     },
     {
+      tab: 'Plugins',
+      icon: IoExtensionPuzzleOutline,
+      label: _('Plugins'),
+    },
+    {
       tab: 'Custom',
       icon: IoAccessibilityOutline,
       label: _('Custom'),
@@ -135,6 +142,7 @@ const SettingsDialog: React.FC<{ bookKey: string }> = ({ bookKey }) => {
     Control: null,
     Language: null,
     AI: null,
+    Plugins: null,
     Custom: null,
   });
 
@@ -167,6 +175,7 @@ const SettingsDialog: React.FC<{ bookKey: string }> = ({ bookKey }) => {
         control: 'Control',
         language: 'Language',
         ai: 'AI',
+        plugins: 'Plugins',
         custom: 'Custom',
       };
       const panelKey = parts[1]?.toLowerCase();
@@ -379,6 +388,7 @@ const SettingsDialog: React.FC<{ bookKey: string }> = ({ bookKey }) => {
           />
         )}
         {activePanel === 'AI' && <AIPanel />}
+        {activePanel === 'Plugins' && <PluginSettingsPanel />}
         {activePanel === 'Custom' && (
           <MiscPanel
             bookKey={bookKey}

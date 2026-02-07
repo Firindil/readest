@@ -9,6 +9,7 @@ import { useReaderStore } from '@/store/readerStore';
 import { useSidebarStore } from '@/store/sidebarStore';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useSettingsStore } from '@/store/settingsStore';
+import { usePluginStore } from '@/store/pluginStore';
 import { useTrafficLightStore } from '@/store/trafficLightStore';
 import { useTrafficLight } from '@/hooks/useTrafficLight';
 import { useResponsiveSize } from '@/hooks/useResponsiveSize';
@@ -49,6 +50,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
   const _ = useTranslation();
   const { envConfig, appService } = useEnv();
   const { settings } = useSettingsStore();
+  const { pluginToolbarButtons } = usePluginStore();
   const { isTrafficLightVisible } = useTrafficLight();
   const { trafficLightInFullscreen, setTrafficLightVisibility } = useTrafficLightStore();
   const { bookKeys, hoveredBookKey } = useReaderStore();
@@ -229,6 +231,16 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
         </div>
 
         <div className='header-tools-end bg-base-100 z-20 ms-auto flex h-full items-center gap-x-4 ps-2 max-[350px]:gap-x-2'>
+          {pluginToolbarButtons.map((btn) => (
+            <button
+              key={btn.id}
+              className='btn btn-ghost h-8 min-h-8 w-8 p-0'
+              onClick={btn.onClick}
+              title={btn.tooltip}
+            >
+              <span className='text-sm'>{btn.icon}</span>
+            </button>
+          ))}
           <SettingsToggler bookKey={bookKey} />
           <NotebookToggler bookKey={bookKey} />
           <Dropdown

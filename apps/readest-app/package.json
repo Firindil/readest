@@ -107,6 +107,7 @@
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",
     "dompurify": "^3.3.0",
+    "@readest/plugin-sdk": "workspace:*",
     "foliate-js": "workspace:*",
     "franc-min": "^6.2.0",
     "fzf": "^0.5.2",

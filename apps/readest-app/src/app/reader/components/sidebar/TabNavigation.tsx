@@ -3,11 +3,12 @@ import React from 'react';
 import { MdBookmarkBorder } from 'react-icons/md';
 import { IoIosList } from 'react-icons/io';
 import { PiNotePencil } from 'react-icons/pi';
-import { LuMessageSquare } from 'react-icons/lu';
+import { LuMessageSquare, LuPuzzle } from 'react-icons/lu';
 
 import { useEnv } from '@/context/EnvContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useSettingsStore } from '@/store/settingsStore';
+import { usePluginStore } from '@/store/pluginStore';
 
 const TabNavigation: React.FC<{
   activeTab: string;
@@ -16,11 +17,21 @@ const TabNavigation: React.FC<{
   const _ = useTranslation();
   const { appService } = useEnv();
   const { settings } = useSettingsStore();
+  const { pluginPanels } = usePluginStore();
   const aiEnabled = settings?.aiSettings?.enabled ?? false;
 
-  const tabs = ['toc', 'annotations', 'bookmarks', ...(aiEnabled ? ['history'] : [])];
+  const pluginTabs = Array.from(pluginPanels.entries())
+    .filter(([, panel]) => panel.visible !== false)
+    .map(([key]) => `plugin:${key}`);
+
+  const tabs = ['toc', 'annotations', 'bookmarks', ...(aiEnabled ? ['history'] : []), ...pluginTabs];
 
   const getTabLabel = (tab: string) => {
+    if (tab.startsWith('plugin:')) {
+      const panelKey = tab.slice('plugin:'.length);
+      const panel = pluginPanels.get(panelKey);
+      return panel?.pluginId ?? panelKey;
+    }
     switch (tab) {
       case 'toc':
         return _('TOC');
@@ -69,6 +80,8 @@ const TabNavigation: React.FC<{
               <PiNotePencil className='mx-auto' />
             ) : tab === 'bookmarks' ? (
               <MdBookmarkBorder className='mx-auto' />
+            ) : tab.startsWith('plugin:') ? (
+              <LuPuzzle className='mx-auto' />
             ) : (
               <LuMessageSquare className='mx-auto' />
             )}

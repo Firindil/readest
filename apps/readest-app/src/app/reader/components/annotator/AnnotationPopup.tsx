@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { Position } from '@/utils/sel';
 import { BookNote, HighlightColor, HighlightStyle } from '@/types/book';
+import { usePluginStore } from '@/store/pluginStore';
 import Popup from '@/components/Popup';
 import AnnotationToolButton from './AnnotationToolButton';
 import AnnotationNotes from './AnnotationNotes';
@@ -46,6 +47,11 @@ const AnnotationPopup: React.FC<AnnotationPopupProps> = ({
   onHighlight,
   onDismiss,
 }) => {
+  const { pluginContextMenuItems } = usePluginStore();
+  const pluginContextItems = pluginContextMenuItems.filter(
+    (item) => item.context === 'text-selection',
+  );
+
   return (
     <div dir={dir}>
       <Popup
@@ -83,6 +89,20 @@ const AnnotationPopup: React.FC<AnnotationPopupProps> = ({
                 />
               );
             })}
+            {pluginContextItems.length > 0 && (
+              <>
+                <div className='mx-1 w-px self-stretch bg-gray-500' />
+                {pluginContextItems.map((item) => (
+                  <AnnotationToolButton
+                    key={item.id}
+                    showTooltip={!highlightOptionsVisible}
+                    tooltipText={item.title}
+                    Icon={() => <span className='text-xs'>{item.icon || '\u26A1'}</span>}
+                    onClick={() => item.handler({})}
+                  />
+                ))}
+              </>
+            )}
           </div>
           {notes.length > 0 ? (
             <AnnotationNotes

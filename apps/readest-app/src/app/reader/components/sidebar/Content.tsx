@@ -10,6 +10,7 @@ import { useSettingsStore } from '@/store/settingsStore';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import 'overlayscrollbars/overlayscrollbars.css';
 
+import { usePluginStore } from '@/store/pluginStore';
 import TOCView from './TOCView';
 import BooknoteView from './BooknoteView';
 import TabNavigation from './TabNavigation';
@@ -24,6 +25,7 @@ const SidebarContent: React.FC<{
   const { setSideBarVisible } = useSidebarStore();
   const { getConfig, setConfig } = useBookDataStore();
   const { settings } = useSettingsStore();
+  const { pluginPanels } = usePluginStore();
   const config = getConfig(sideBarBookKey);
   const [activeTab, setActiveTab] = useState(config?.viewSettings?.sideBarTab || 'toc');
   const [fade, setFade] = useState(false);
@@ -75,6 +77,15 @@ const SidebarContent: React.FC<{
       >
         {targetTab === 'history' ? (
           <ChatHistoryView bookKey={sideBarBookKey} />
+        ) : targetTab.startsWith('plugin:') ? (
+          (() => {
+            const panelKey = targetTab.slice('plugin:'.length);
+            const panel = pluginPanels.get(panelKey);
+            if (!panel) return null;
+            const PanelComponent = panel.component;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return <PanelComponent visible={true} api={null as any} />;
+          })()
         ) : (
           <OverlayScrollbarsComponent
             className='min-h-0 flex-1'

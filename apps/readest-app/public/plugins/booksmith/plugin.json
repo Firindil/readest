@@ -1,0 +1,116 @@
+{
+  "id": "booksmith",
+  "name": "Booksmith",
+  "version": "1.0.0",
+  "description": "LLM-powered EPUB editing, filtering, and annotation",
+  "author": "Booksmith Contributors",
+  "license": "MIT",
+  "homepage": "https://github.com/Firindil/booksmith",
+
+  "sdk": ">=0.1.0",
+  "platforms": ["windows", "macos", "linux"],
+
+  "main": "./dist/index.js",
+  "styles": "./dist/styles.css",
+
+  "permissions": [
+    "book:read",
+    "book:metadata",
+    "chapter:read",
+    "chapter:transform",
+    "annotations:read",
+    "annotations:write",
+    "ui:panel",
+    "ui:contextMenu",
+    "ui:toolbar",
+    "ui:settings",
+    "network:localhost",
+    "sidecar:spawn"
+  ],
+
+  "sidecar": {
+    "command": "booksmith-server",
+    "args": ["--port", "${port}"],
+    "healthCheck": "/api/health",
+    "healthTimeout": 10000
+  },
+
+  "commands": [
+    {
+      "id": "booksmith.cleanChapter",
+      "title": "Booksmith: Clean Current Chapter",
+      "keybinding": "Ctrl+Shift+C"
+    },
+    {
+      "id": "booksmith.annotateSelection",
+      "title": "Booksmith: Annotate Selection"
+    },
+    {
+      "id": "booksmith.filterContent",
+      "title": "Booksmith: Filter Content Settings"
+    },
+    {
+      "id": "booksmith.estimateCost",
+      "title": "Booksmith: Estimate Processing Cost"
+    }
+  ],
+
+  "panels": [
+    {
+      "id": "booksmith.main",
+      "title": "Booksmith",
+      "icon": "wand",
+      "location": "sidebar"
+    },
+    {
+      "id": "booksmith.annotations",
+      "title": "Annotations",
+      "icon": "message-square",
+      "location": "sidebar"
+    }
+  ],
+
+  "contextMenuItems": [
+    {
+      "id": "booksmith.annotatePassage",
+      "title": "Annotate with Booksmith",
+      "context": "text-selection"
+    },
+    {
+      "id": "booksmith.cleanSelection",
+      "title": "Clean with Booksmith",
+      "context": "text-selection"
+    }
+  ],
+
+  "settings": {
+    "schema": {
+      "apiKey": {
+        "type": "string",
+        "title": "Anthropic API Key",
+        "description": "Your API key for Claude",
+        "secret": true
+      },
+      "defaultModel": {
+        "type": "string",
+        "title": "Default Model",
+        "enum": ["claude-haiku-4-5-20251001", "claude-sonnet-4-5-20250929", "claude-opus-4-6"],
+        "default": "claude-sonnet-4-5-20250929"
+      },
+      "parallelWorkers": {
+        "type": "number",
+        "title": "Parallel Workers",
+        "description": "Number of chapters to process concurrently",
+        "default": 4,
+        "minimum": 1,
+        "maximum": 16
+      },
+      "filterProfile": {
+        "type": "string",
+        "title": "Content Filter Profile",
+        "enum": ["strict", "moderate", "minimal", "none"],
+        "default": "none"
+      }
+    }
+  }
+}

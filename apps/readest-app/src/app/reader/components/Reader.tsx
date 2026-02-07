@@ -18,6 +18,7 @@ import { useScreenWakeLock } from '@/hooks/useScreenWakeLock';
 import { useTransferQueue } from '@/hooks/useTransferQueue';
 import { eventDispatcher } from '@/utils/event';
 import { interceptWindowOpen } from '@/utils/open';
+import { initializePlugins, shutdownPlugins } from '@/services/plugins/pluginInitService';
 import { mountAdditionalFonts } from '@/styles/fonts';
 import { isTauriAppPlatform } from '@/services/environment';
 import { getSysFontsList, setSystemUIVisibility } from '@/utils/bridge';
@@ -78,6 +79,15 @@ const Reader: React.FC<{ ids?: string }> = ({ ids }) => {
       setTimeout(getSysFontsList, 3000);
     }
     initDayjs(getLocale());
+  }, []);
+
+  useEffect(() => {
+    const bookKeyAccessor = () => sideBarBookKey;
+    initializePlugins(bookKeyAccessor).catch(console.error);
+    return () => {
+      shutdownPlugins().catch(console.error);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

@@ -169,9 +169,25 @@
           "name": "launch-appimage",
           "cmd": "setsid",
           "args": [{ "validator": "^.*Readest(.*)\\.AppImage$" }]
+        },
+        {
+          "name": "plugin-sidecar-python",
+          "cmd": "python",
+          "args": ["-m", { "validator": "^[a-zA-Z_][a-zA-Z0-9_]*$" }, { "validator": "^--.*$" }, { "validator": "^[0-9]+$" }]
+        },
+        {
+          "name": "plugin-sidecar-python3",
+          "cmd": "python3",
+          "args": ["-m", { "validator": "^[a-zA-Z_][a-zA-Z0-9_]*$" }, { "validator": "^--.*$" }, { "validator": "^[0-9]+$" }]
+        },
+        {
+          "name": "plugin-sidecar-binary",
+          "cmd": { "validator": "^.*[\\\\/]plugins[\\\\/][a-zA-Z0-9_-]+[\\\\/][a-zA-Z0-9_.-]+$" },
+          "args": [{ "validator": "^--.*$" }, { "validator": "^[0-9]+$" }]
         }
       ]
     },
+    "shell:allow-kill",
     "haptics:allow-vibrate",
     "haptics:allow-impact-feedback",
     "haptics:allow-notification-feedback",
